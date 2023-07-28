@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #Variables
-CLUSTER_NAME=eksp5
+CLUSTER_NAME=eksp6
 REGION=us-east-1
 
 

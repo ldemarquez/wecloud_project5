@@ -47,7 +47,10 @@ COPY --from=builder /app/build /usr/share/nginx/html%
 
 1.2 Build locally your docker image
 
-ldemarquez@Luiss-MacBook-Pro-2 docker-react % docker build -t wecloud_project5:0.0.2 . 
+docker-react % docker build -t wecloud_project5:0.0.2 . 
+
+
+
 [+] Building 15.7s (14/14) FINISHED                                                                                                
  => [internal] load build definition from Dockerfile                                                                          0.0s
  => => transferring dockerfile: 120B                                                                                          0.0s
@@ -69,18 +72,19 @@ ldemarquez@Luiss-MacBook-Pro-2 docker-react % docker build -t wecloud_project5:0
  => => exporting layers                                                                                                       0.0s 
  => => writing image sha256:4cee0dc693ec23d296af4ede8814006eb5454d3504342620bf03a19cddd3c064                                  0.0s 
  => => naming to docker.io/library/wecloud_project5:0.0.2                                                                     0.0s 
-ldemarquez@Luiss-MacBook-Pro-2 docker-react % 
+docker-react % 
 
 1.3   Check local image, tag and push 
 
-ldemarquez@Luiss-MacBook-Pro-2 docker-react % docker image ls wecloud_project5
+docker-react % docker image ls wecloud_project5
 REPOSITORY         TAG       IMAGE ID       CREATED         SIZE
 wecloud_project5   0.0.2     4cee0dc693ec   3 minutes ago   187MB
 
 docker image tag wecloud_project5:0.0.2 ldemarquez/wecloud_project5:0.0.2 
 
 
-ldemarquez@Luiss-MacBook-Pro-2 docker-react % docker push ldemarquez/wecloud_project5:0.0.2
+ docker push ldemarquez/wecloud_project5:0.0.2
+
 The push refers to repository [docker.io/ldemarquez/wecloud_project5]
 7f64e637d25b: Pushed 
 3c9d04c9ebd5: Mounted from ldemarquez/p5-react 
@@ -104,7 +108,8 @@ Verify credential with script chk_aws.sh
 
 eksctl 
 
-ldemarquez@Luiss-MacBook-Pro-2 react-project5 % eksctl info
+ % eksctl info
+
 eksctl version: 0.124.0
 kubectl version: v1.23.0
 OS: darwin
@@ -123,7 +128,8 @@ ZONE2=us-east-1b
 
 Run script ./create-ekscluster.sh 
 
-ldemarquez@Luiss-MacBook-Pro-2 infra % ./create-ekscluster.sh 
+% ./create-ekscluster.sh 
+
 2023-07-25 13:40:14 [ℹ]  eksctl version 0.124.0
 2023-07-25 13:40:14 [ℹ]  using region us-east-1
 2023-07-25 13:40:14 [ℹ]  subnets for us-east-1a - public:192.168.0.0/19 private:192.168.64.0/19
@@ -159,11 +165,14 @@ ldemarquez@Luiss-MacBook-Pro-2 infra % ./create-ekscluster.sh
 
 Verify 
 
-ldemarquez@Luiss-MacBook-Pro-2 infra % eksctl get cluster 
+% eksctl get cluster 
+
 NAME		REGION		EKSCTL CREATED
 eksdemo1	us-east-1	True
 eksp5		us-east-1	True
-ldemarquez@Luiss-MacBook-Pro-2 infra % kubectl config view |grep eksp5
+
+kubectl config view |grep eksp5
+
   name: eksp5.us-east-1.eksctl.io
     cluster: eksp5.us-east-1.eksctl.io
     user: root@eksp5.us-east-1.eksctl.io
@@ -173,7 +182,8 @@ current-context: root@eksp5.us-east-1.eksctl.io
       - eksp5
 
 
-ldemarquez@Luiss-MacBook-Pro-2 infra % kubectl get namespaces 
+% kubectl get namespaces 
+
 NAME              STATUS   AGE
 default           Active   22m
 kube-node-lease   Active   22m
@@ -182,11 +192,14 @@ kube-system       Active   22m
 
 ## Create namespace p5
 
-ldemarquez@Luiss-MacBook-Pro-2 infra % kubectl create namespace p5 
+
+% kubectl create namespace p5 
+
 namespace/p5 created
 
 
-ldemarquez@Luiss-MacBook-Pro-2 infra % kubectl get namespaces      
+% kubectl get namespaces      
+
 NAME              STATUS   AGE
 default           Active   22m
 kube-node-lease   Active   22m
@@ -206,7 +219,8 @@ CLUSTER_NAME=eksp5
 REGION=us-east-1
 
 
-ldemarquez@Luiss-MacBook-Pro-2 infra % ./create-iamoidc-provider.sh
+% ./create-iamoidc-provider.sh
+
 2023-07-25 14:18:23 [ℹ]  will create IAM Open ID Connect provider for cluster "eksp5" in "us-east-1"
 2023-07-25 14:18:23 [✔]  created IAM Open ID Connect provider for cluster "eksp5" in "us-east-1"
 
@@ -234,7 +248,9 @@ SSH_PUBLIC_KEY=project2KeyPair
 
 !!!!!!! NOTE:  Remenber never commit your EC2 KeyPair to your repo !!!!!!!!
 
-ldemarquez@Luiss-MacBook-Pro-2 infra % ./create-nodegroup.sh
+
+ % ./create-nodegroup.sh
+
 2023-07-25 14:37:59 [ℹ]  will use version 1.23 for new nodegroup(s) based on control plane version
 2023-07-25 14:38:01 [ℹ]  nodegroup "eksp5-ng-private1" will use "" [AmazonLinux2/1.23]
 2023-07-25 14:38:01 [ℹ]  using EC2 key pair %!q(*string=<nil>)
@@ -265,12 +281,15 @@ ldemarquez@Luiss-MacBook-Pro-2 infra % ./create-nodegroup.sh
 2023-07-25 14:41:35 [ℹ]  checking security group configuration for all nodegroups
 2023-07-25 14:41:35 [ℹ]  all nodegroups have up-to-date cloudformation templates
 
-ldemarquez@Luiss-MacBook-Pro-2 infra % eksctl get nodegroup --cluster eksp5
+% eksctl get nodegroup --cluster eksp5
+
 CLUSTER	NODEGROUP		STATUS	CREATED			MIN SIZE	MAX SIZE	DESIRED CAPACITY	INSTANCE TYPE	IMAGE ID	ASG NAME			TYPE
 eksp5	eksp5-ng-private1	ACTIVE	2023-07-25T18:38:23Z	2		4		2			t3.medium	AL2_x86_64	eks-eksp5-ng-private1-e4c4c72c-2d36-2c8c-e858-7cf28eb8c3a5	managed
 
+Please notice below that the EKS nodes don't have EXTERNAL-IP, all coonectivity to the nodes, pods and services will be via the Networl Load Balancers
 
-ldemarquez@Luiss-MacBook-Pro-2 infra % kubectl get nodes -o wide
+% kubectl get nodes -o wide
+
 NAME                             STATUS   ROLES    AGE     VERSION                INTERNAL-IP      EXTERNAL-IP   OS-IMAGE         KERNEL-VERSION                 CONTAINER-RUNTIME
 ip-192-168-102-59.ec2.internal   Ready    <none>   2m30s   v1.23.17-eks-a5565ad   192.168.102.59   <none>        Amazon Linux 2   5.4.247-162.350.amzn2.x86_64   docker://20.10.23
 ip-192-168-82-136.ec2.internal   Ready    <none>   2m28s   v1.23.17-eks-a5565ad   192.168.82.136   <none>        Amazon Linux 2   5.4.247-162.350.amzn2.x86_64   docker://20.10.23
@@ -283,16 +302,18 @@ Deploy all manifest in namespace p5
 
 Verify name space p5 was created 
 
-ldemarquez@Luiss-MacBook-Pro-2 manifest % kubectl get namespace p5 
+% kubectl get namespace p5 
 NAME   STATUS   AGE
 p5     Active   69m
 
-ldemarquez@Luiss-MacBook-Pro-2 manifest % kubectl get all -n p5    
+% kubectl get all -n p5    
+
 No resources found in p5 namespace.
 
 on the top of the working dir
 
 ldemarquez@Luiss-MacBook-Pro-2 react-project5 % kubectl apply -f manifest/ -n p5 
+
 deployment.apps/web created
 service/nlb-web created
 service/web created
@@ -319,7 +340,7 @@ wait 5 min that the service/nlb-web   LoadBalancer is fully created and has publ
 
 No public IP and DNS entry created for the NLB network Load Balancer 
 
-ldemarquez@Luiss-MacBook-Pro-2 react-project5 % nslookup ac6e42a47ab8547bf98be6b5ec74d06b-97a10385a376f0ea.elb.us-east-1.amazonaws.com
+nslookup ac6e42a47ab8547bf98be6b5ec74d06b-97a10385a376f0ea.elb.us-east-1.amazonaws.com
 Server:		2607:f798:18:10:0:640:7125:5204
 Address:	2607:f798:18:10:0:640:7125:5204#53
 
@@ -327,7 +348,8 @@ Address:	2607:f798:18:10:0:640:7125:5204#53
 
 after 5 minutes 
 
-ldemarquez@Luiss-MacBook-Pro-2 react-project5 % nslookup ac6e42a47ab8547bf98be6b5ec74d06b-97a10385a376f0ea.elb.us-east-1.amazonaws.com
+nslookup ac6e42a47ab8547bf98be6b5ec74d06b-97a10385a376f0ea.elb.us-east-1.amazonaws.com
+
 Server:		2607:f798:18:10:0:640:7125:5204
 Address:	2607:f798:18:10:0:640:7125:5204#53
 
@@ -338,6 +360,8 @@ Name:	ac6e42a47ab8547bf98be6b5ec74d06b-97a10385a376f0ea.elb.us-east-1.amazonaws.
 Address: 34.231.123.65
 
 Verify access to the Web App suing the NLB 
+
+example below http://nlb
 
 in the browser http://ac6e42a47ab8547bf98be6b5ec74d06b-97a10385a376f0ea.elb.us-east-1.amazonaws.com
 
@@ -351,19 +375,24 @@ in the browser http://ac6e42a47ab8547bf98be6b5ec74d06b-97a10385a376f0ea.elb.us-e
 
 on the top of the working dir
 
-ldemarquez@Luiss-MacBook-Pro-2 react-project5 % kubectl delete -f manifest -n p5 
+% kubectl delete -f manifest -n p5 
+
 deployment.apps "web" deleted
 service "nlb-web" deleted
 service "web" deleted
 
-ldemarquez@Luiss-MacBook-Pro-2 react-project5 % kubectl get all -n p5                                                              
+
+% kubectl get all -n p5                                                              
+
 No resources found in p5 namespace.
 
 2. Remove node group 
 
 cd infra
 
-ldemarquez@Luiss-MacBook-Pro-2 react-project5 % eksctl get nodegroup --cluster=eksp5
+
+% eksctl get nodegroup --cluster=eksp5
+
 CLUSTER	NODEGROUP		STATUS	CREATED			MIN SIZE	MAX SIZE	DESIRED CAPACITY	INSTANCE TYPE	IMAGE ID	ASG NAME			TYPE
 eksp5	eksp5-ng-private1	ACTIVE	2023-07-25T18:38:23Z	2		4		2			t3.medium	AL2_x86_64	eks-eksp5-ng-private1-e4c4c72c-2d36-2c8c-e858-7cf28eb8c3a5	managed
 
@@ -383,14 +412,16 @@ ldemarquez@Luiss-MacBook-Pro-2 react-project5 % eksctl delete nodegroup --cluste
 
 3. Remove EKS Cluster
 
-ldemarquez@Luiss-MacBook-Pro-2 react-project5 % eksctl get clusters
+eksctl get clusters
+
 NAME		REGION		EKSCTL CREATED
 eksdemo1	us-east-1	True
 eksp5		us-east-1	True
 
 eksctl delete cluster eksp5 
 
-ldemarquez@Luiss-MacBook-Pro-2 react-project5 % eksctl delete cluster eksp5
+eksctl delete cluster eksp5
+
 2023-07-25 15:41:23 [ℹ]  deleting EKS cluster "eksp5"
 2023-07-25 15:41:24 [ℹ]  deleted 0 Fargate profile(s)
 2023-07-25 15:41:24 [✔]  kubeconfig has been updated
@@ -403,6 +434,6 @@ ldemarquez@Luiss-MacBook-Pro-2 react-project5 % eksctl delete cluster eksp5
 
 wait 5 minutes until the the cluster has been fully deleted
 
-ldemarquez@Luiss-MacBook-Pro-2 react-project5 % eksctl get clusters
+eksctl get clusters
 NAME		REGION		EKSCTL CREATED
 eksdemo1	us-east-1	True
